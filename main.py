@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Form
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -6,7 +6,7 @@ app = FastAPI()
 
 app.add_middleware(
   CORSMiddleware,
-  allow_origins=["http://localhost:5173"],  # frontend dev URL
+  allow_origins=["http://localhost:5173"],
   allow_credentials=True,
   allow_methods=["*"],
   allow_headers=["*"],
@@ -22,7 +22,8 @@ def read_root():
   return {"message": "Backend is working!"}
 
 @app.post("/parse-repo")
-def parse_repo(req: RepoRequest):
-  return {"message": f"Received repo URL: {req.repo_url}"}
+async def parse_repo(repo_link: str = Form(...)):
+    print(f"Received repo link: {repo_link}")
+    return {"message": f"Received repo link: {repo_link}"}
 
 # uvicorn main:app --reload
